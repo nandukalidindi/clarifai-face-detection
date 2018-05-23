@@ -1,0 +1,22 @@
+{
+  "name": "clarifai_face_detection",
+  "version": "0.0.0",
+  "description": "Use Clarifai API to detect faces",
+  "scripts": {
+    "start": "npm run webpack",
+    "webpack": "webpack -d --watch"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "clarifai": "^2.7.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "webpack": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1"
+  }
+}
