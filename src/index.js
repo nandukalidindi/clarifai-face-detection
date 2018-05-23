@@ -3,4 +3,6 @@ import ReactDOM from "react-dom";
 
 import "../css/styles.css"
 
-ReactDOM.render(<div>Hello React!</div>, document.getElementById("root"));
+import FaceDetection from "./FaceDetection";
+
+ReactDOM.render(<FaceDetection />, document.getElementById("root"));
