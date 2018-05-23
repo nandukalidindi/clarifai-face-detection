@@ -25,10 +25,7 @@ class FileUploadPreview extends Component {
 
   render() {
     return (
-      <div style={{width: "100%", height: "50px", display: "flex", alignItems: "center"}}>
-        <img src={this.props.url} style={{height: "100%"}} />
-        <span> {this.props.title} </span>
-      </div>
+      <img src={this.props.url} style={{height: "100px", width: "160px", margin: "10px"}} />
     );
   }
 

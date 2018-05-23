@@ -10,7 +10,8 @@ class Uploader extends Component {
     super(props);
 
     this.state = {
-      files: []
+      files: [],
+      processing: false
     };
   }
 
@@ -29,7 +30,6 @@ class Uploader extends Component {
     Promise.all(files.map(this.getBase64)).then((response) => {
       const transformedResponse = response.map(file => ({
         title: file.title,
-        base64: file.url,
         url: file.url,
         type: "base64",
         uniqueId: `${file.title}-${(new Date()).getTime()}`
@@ -74,7 +74,6 @@ class Uploader extends Component {
     const paramsHash = this.state.files.reduce((acc, image) => {
       acc[image.uniqueId] = {
         base64: image.url.split("base64,").pop(),
-        fullBase64: image.url,
         id: image.uniqueId,
         type: image.type
       };
@@ -108,31 +107,66 @@ class Uploader extends Component {
 
   getBase64 = (file) => {
     return new Promise((resolve, reject) => {
-      var reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = function () {
+      reader.onload = () => {
         resolve({title: file.name, url: reader.result});
       };
-      reader.onerror = function (error) {
+      reader.onerror = (error) => {
         console.log('Error: ', error);
-        reject(error)
+        reject(error);
       };
     })
   }
 
   render() {
     return (
-      <div style={{width: "100%", height: "100%", display: "flex"}}>
-        <div style={{width: "50%", height: "100%", backgroundColor: "gray"}} onDrop={this.onFilesDrop} onDragOver={this.onDragOver}>
+      <div style={{width: "100%", height: "100%"}} className="container">
+        <div
+          className="dnd-uploader"
+          onDrop={this.onFilesDrop}
+          onDragOver={this.onDragOver}
+        >
+          <svg className="upload-box-marquee" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+            <rect className="upload-box-rect" x="0" y="0" width="100%" height="100%"></rect>
+          </svg>
+          <div>
+            <img src="" />
+            <label htmlFor="file-upload">
+              <input
+                id="file-upload"
+                ref={(elem) => { this.fileUploadEl = elem; }}
+                style={{display: "none"}}
+                type="file"
+                multiple="true"
+                onChange={this.onFilesUpload}
+              />
+              browse
+            </label>
+          </div>
         </div>
-        <div style={{width: "50%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "center"}}>
+        <div className="preview-list">
           {
             this.state.files.map(file => <FileUploadPreview title={file.title} url={file.url} />)
           }
-          <div>
-            <input type="file" multiple="true" onChange={this.onFilesUpload} />
-            <input type="text" defaultValue="" onChange={this.addUrl}/> <input type="button" defaultValue="INSERT URL" onClick={this.insertURL}/>
-            <input type="button" defaultValue="PROCESS" onClick={this.processImagesForFaceDetection} />
+        </div>
+        <div className="toolbar">
+          <div style={{display: "flex", justifyContent: "space-between"}}>
+            <input
+              className="url-input-box"
+              type="text"
+              defaultValue=""
+              onChange={this.addUrl}
+              placeholder="Enter a URL"
+            />
+            <div className="process-button" onClick={this.insertURL}> URL </div>
+          </div>
+          <div
+            style={this.state.files.length > 0 ? { pointerEvents: "auto", opacity: 1.0, width: "100%", height: "30px" } : { pointerEvents: "none", opacity: 0.5, width: "100%", height: "30px" }}
+            className="process-button"
+            onClick={this.processImagesForFaceDetection}
+          >
+            PROCESS
           </div>
         </div>
       </div>

@@ -1,0 +1,8 @@
+.image-scalable-thumbnail {
+  transform: scale(1.0, 1.0);
+  transition: all 2s;
+}
+
+.image-scalable-thumbnail:hover {
+  transform: scale(1.1, 1.1);
+}
