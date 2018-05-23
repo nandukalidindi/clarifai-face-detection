@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import Uploader from "./components/Uploader";
+import ImageList from "./components/ImageList";
 import Modal from "./components/Modal";
 
 class FaceDetection extends Component {
@@ -21,6 +22,7 @@ class FaceDetection extends Component {
   render() {
     return (
       <div style={{padding: "50px"}}>
+        <ImageList />
         <input value="UPLOAD" type="button" onClick={this.uploaderModal} />
         {
           this.state.modal

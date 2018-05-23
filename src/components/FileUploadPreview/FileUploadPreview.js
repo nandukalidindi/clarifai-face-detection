@@ -1,31 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
 
-import './Modal.css';
+import './FileUploadPreview.css';
 
-const modalRoot = document.getElementById('modal-root');
-
-class Modal extends React.Component {
+class FileUploadPreview extends Component {
 
   constructor(props) {
     super(props);
-    this.modalEl = document.createElement('div');
-  }
-
-  state = {
-
+    this.state = {};
   }
 
   //===========================================================================
   //                          LIFE CYCLE HOOKS
   //===========================================================================
-  componentDidMount() {
-    modalRoot.appendChild(this.modalEl);
-  }
 
-  componentWillUnmount() {
-    modalRoot.removeChild(this.modalEl)
-  }
 
   //===========================================================================
   //                          EVENT HANDLERS
@@ -37,16 +24,19 @@ class Modal extends React.Component {
   //===========================================================================
 
   render() {
-    return ReactDOM.createPortal(
-      this.props.children,
-      this.modalEl
+    return (
+      <div style={{width: "100%", height: "50px", display: "flex", alignItems: "center"}}>
+        <img src={this.props.url} style={{height: "100%"}} />
+        <span> {this.props.title} </span>
+      </div>
     );
   }
-};
-
-Modal.propTypes = {
 
 };
 
+FileUploadPreview.propTypes = {
 
-export default Modal;
+};
+
+
+export default FileUploadPreview;

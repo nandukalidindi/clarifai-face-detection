@@ -1,0 +1,6 @@
+{
+  "name": "FaceDetectionPreview",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./FaceDetectionPreview.js"
+}
