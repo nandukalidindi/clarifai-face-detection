@@ -45,7 +45,7 @@ class ImageList extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{display: "flex", flexWrap: "wrap"}}>
         {
           this.state.images.map(image => (
             <FaceDetectionPreview
@@ -55,29 +55,26 @@ class ImageList extends React.Component {
             />
           ))
         }
-        <Modal>
-          {
-            this.state.modal
-              ?
-              <div className="modal-dialog">
-                <div style={{overflowY: "auto"}}>
-                  <div className="close-button" onClick={this.closeModal}>
-                   CLOSE
-                  </div>
-                  <div style={{width: "90%", height: "90%"}}>
-                    <FaceDetectionPreview
-                      url={this.state.activePreview.url}
-                      regions={this.state.activePreview.regions}
-                      height={"90%"}
-                    />
-                  </div>
+        {
+          this.state.modal
+            ?
+            <div className="modal-dialog">
+              <div style={{overflowY: "auto"}}>
+                <div className="close-button" onClick={this.closeModal}>
+                 CLOSE
+                </div>
+                <div style={{width: "90%", height: "90%"}}>
+                  <FaceDetectionPreview
+                    url={this.state.activePreview.url}
+                    regions={this.state.activePreview.regions}
+                    height={"90%"}
+                  />
                 </div>
               </div>
-              :
-              <div className="modal-dialog-before" />
-            }
+            </div>
+            :
+            <div className="modal-dialog-before" />
           }
-        </Modal>
       </div>
     );
   }

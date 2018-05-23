@@ -49,7 +49,7 @@ class FaceDetectionPreview extends React.Component {
 
   render() {
     return (
-      <div style={{width: "100%", height: this.props.height || "150px", position: "relative"}} onClick={this.props.onClick && this.props.onClick(this.props.url, this.props.regions)}>
+      <div style={{height: this.props.height || "150px", position: "relative"}} onClick={this.props.onClick && this.props.onClick(this.props.url, this.props.regions)}>
         <img
           ref={this.imageElem}
           src={this.props.url} style={{height: "100%"}}

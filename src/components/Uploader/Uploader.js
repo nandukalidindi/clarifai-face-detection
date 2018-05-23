@@ -31,11 +31,12 @@ class Uploader extends Component {
         title: file.title,
         base64: file.url,
         url: file.url,
+        type: "base64",
         uniqueId: `${file.title}-${(new Date()).getTime()}`
       }));
 
       this.setState({
-        files: transformedResponse
+        files: [...this.state.files, ...transformedResponse]
       });
     })
   }
@@ -49,6 +50,22 @@ class Uploader extends Component {
     event.preventDefault();
   }
 
+  addUrl = (event) => {
+    this.insertableURL = event.target.value;
+  }
+
+  insertURL = (event) => {
+    const files = [...this.state.files];
+
+    files.push({
+      title: "",
+      url: this.insertableURL,
+      type: "url"
+    });
+
+    this.setState({ files });
+  }
+
   //===========================================================================
   //                          INSTANCE METHODS
   //===========================================================================
@@ -58,14 +75,15 @@ class Uploader extends Component {
       acc[image.uniqueId] = {
         base64: image.url.split("base64,").pop(),
         fullBase64: image.url,
-        id: image.uniqueId
+        id: image.uniqueId,
+        type: image.type
       };
 
       return acc;
     }, {});
 
     const buildPredictParameters = Object.keys(paramsHash).map(uniqueId => ({
-      base64: paramsHash[uniqueId]["base64"],
+      [paramsHash[uniqueId]["type"]]: paramsHash[uniqueId]["base64"],
       id: uniqueId
     }));
 
@@ -113,7 +131,7 @@ class Uploader extends Component {
           }
           <div>
             <input type="file" multiple="true" onChange={this.onFilesUpload} />
-            <input type="text" /> <input type="button" defaultValue="INSERT URL" />
+            <input type="text" defaultValue="" onChange={this.addUrl}/> <input type="button" defaultValue="INSERT URL" onClick={this.insertURL}/>
             <input type="button" defaultValue="PROCESS" onClick={this.processImagesForFaceDetection} />
           </div>
         </div>
