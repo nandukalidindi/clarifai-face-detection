@@ -5,10 +5,14 @@ import './ImageList.css';
 import FaceDetectionPreview from "../FaceDetectionPreview";
 import Modal from "../Modal";
 
+import EMITTER from "../../utils/emitter";
+
 class ImageList extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.predictSubscription = null;
     this.state = {
       images: JSON.parse(localStorage.getItem("imagesList") || "[]"),
       modal: false,
@@ -19,7 +23,15 @@ class ImageList extends React.Component {
   //===========================================================================
   //                          LIFE CYCLE HOOKS
   //===========================================================================
+  componentWillMount() {
+    this.predictSubscription = EMITTER.addListener("refreshImageList", () => {
+      this.setState({ images: JSON.parse(localStorage.getItem("imagesList") || "[]")});
+    })
+  }
 
+  componentWillUnmount() {
+    this.predictSubscription && this.predictSubscription.remove();
+  }
 
   //===========================================================================
   //                          EVENT HANDLERS

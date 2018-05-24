@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from "prop-types";
 
 import './FaceDetectionPreview.css';
 
@@ -102,7 +103,12 @@ class FaceDetectionPreview extends React.Component {
 };
 
 FaceDetectionPreview.propTypes = {
-
+  containerClassName: PropTypes.string,
+  containerStyle: PropTypes.object,
+  highlighterStroke: PropTypes.object,
+  url: PropTypes.string,
+  regions: PropTypes.array,
+  onClick: PropTypes.func
 };
 
 

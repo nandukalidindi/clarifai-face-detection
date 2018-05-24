@@ -38,7 +38,7 @@ class FaceDetection extends Component {
                  CLOSE
                 </div>
                 <div style={{width: "100%", height: "90%"}}>
-                  <Uploader />
+                  <Uploader closeModal={this.uploaderModal}/>
                 </div>
               </div>
             </div>
