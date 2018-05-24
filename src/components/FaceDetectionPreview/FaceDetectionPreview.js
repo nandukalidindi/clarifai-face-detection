@@ -21,6 +21,16 @@ class FaceDetectionPreview extends React.Component {
   //===========================================================================
   //                          EVENT HANDLERS
   //===========================================================================
+
+  /**
+   * Event handler to get the calculated height and width of the Image
+   * that is shown on a custom container
+   *
+   * Calculates the positions of the bounding regions with respect to the
+   * dimensions of the Image
+   *
+   * @param {object} event DOM Event
+   */
   onImageLoad = (event) => {
     const imageHeight = this.imageElem.current.offsetHeight;
     const imageWidth = this.imageElem.current.offsetWidth;
@@ -34,6 +44,18 @@ class FaceDetectionPreview extends React.Component {
   //                          INSTANCE METHODS
   //===========================================================================
 
+  /**
+   * Calculates the absolute positioning of the Face detector highlighters
+   * based on the Image dimensions and the bounding regions from the API
+   *
+   * @param {object[]} regions region array obtained from the Predict API
+   *  @param {object} region_info
+   *    @param {object} bounding_box { left_col, top_row, right_col, bottom_row }
+   *
+   * @param {object} imageDimensions { height, width }
+   *
+   * @return {object[]} { left, top, width, height }
+   */
   tranformRegionDimension = (regions, imageDimensions) => {
     return regions.map(region => {
       const left = (imageDimensions.width * region.region_info.bounding_box.left_col);
@@ -57,17 +79,17 @@ class FaceDetectionPreview extends React.Component {
         <img
           ref={this.imageElem}
           src={this.props.url}
-          style={{height: "100%", width: "100%"}}
+          className="height-width-100"
           onLoad={this.onImageLoad}
         />
         {
-          this.state.faceDetectors.map(detector => (
-            <div style={{...detector, position: "absolute"}}>
-              <svg className="upload-box-marquee" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          this.state.faceDetectors.map((detector, index) => (
+            <div style={{...detector, position: "absolute"}} key={`detector-${index}`}>
+              <svg className="upload-box-marquee height-width-100" xmlns="http://www.w3.org/2000/svg">
                 <rect
                   style={this.props.highlighterStroke}
-                  className="upload-box-rect"
-                  x="0" y="0" width="100%" height="100%"
+                  className="upload-box-rect height-width-100"
+                  x="0" y="0"
                 />
               </svg>
             </div>

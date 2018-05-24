@@ -47,8 +47,9 @@ class ImageList extends React.Component {
     return (
       <div style={{display: "flex", flexWrap: "wrap", width: "80%"}}>
         {
-          this.state.images.map(image => (
+          this.state.images.map((image, index) => (
             <FaceDetectionPreview
+              key={`image-${index}`}
               containerStyle={{width: "200px", height: "150px"}}
               highlighterStroke={{strokeWidth: "2px", strokeDasharray: "4 6", stroke: "black"}}
               containerClassName={"image-scalable-thumbnail"}
@@ -63,7 +64,7 @@ class ImageList extends React.Component {
             ?
             <div className="modal-dialog">
               <div style={{overflowY: "auto"}}>
-                <div className="close-button" onClick={this.closeModal}>
+                <div className="process-button close-button" onClick={this.closeModal}>
                  CLOSE
                 </div>
                 <div style={{width: "90%", height: "95%"}}>

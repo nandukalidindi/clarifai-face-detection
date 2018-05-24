@@ -34,7 +34,7 @@ class FaceDetection extends Component {
             ?
             <div className="modal-dialog">
               <div style={{overflowY: "auto"}}>
-                <div className="close-button" onClick={this.uploaderModal}>
+                <div className="process-button close-button" onClick={this.uploaderModal}>
                  CLOSE
                 </div>
                 <div style={{width: "100%", height: "90%"}}>

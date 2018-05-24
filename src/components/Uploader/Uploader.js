@@ -5,6 +5,37 @@ import UploadIcon from "../../images/upload-to-cloud.png";
 
 import FileUploadPreview from "../FileUploadPreview";
 import { FACE_DETECT_APP } from "../../utils/clarifai";
+import BASE64_EXTRACTOR from "../../utils/base64Extractor"
+
+const DnDUploader = ({ onDrop, onDragOver, onChange }) => (
+  <div
+    className="dnd-uploader"
+    onDrop={onDrop}
+    onDragOver={onDragOver}
+  >
+    <svg className="upload-box-marquee" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+      <rect
+        className="upload-box-rect height-width-100"
+        x="0" y="0"
+      />
+    </svg>
+    <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+      <img src={UploadIcon} style={{width: "150px"}} />
+      <div> Drag and Drop </div>
+      <div> OR </div>
+      <label htmlFor="file-upload" style={{cursor: "pointer"}}>
+        <input
+          id="file-upload"
+          style={{display: "none"}}
+          type="file"
+          multiple="true"
+          onChange={onChange}
+        />
+        <em>Choose</em> from file system
+      </label>
+    </div>
+  </div>
+)
 
 class Uploader extends Component {
 
@@ -29,12 +60,10 @@ class Uploader extends Component {
   onFilesUpload = (event) => {
     const files = Object.keys(event.target.files).map(file => event.target.files[file]);
 
-    Promise.all(files.map(this.getBase64)).then((response) => {
+    Promise.all(files.map(BASE64_EXTRACTOR)).then((response) => {
       const transformedResponse = response.map(file => ({
-        title: file.title,
-        url: file.url,
+        url: file,
         type: "base64",
-        uniqueId: `${file.title}-${(new Date()).getTime()}`
       }));
 
       this.setState({
@@ -73,20 +102,9 @@ class Uploader extends Component {
   //===========================================================================
 
   processImagesForFaceDetection = (event) => {
-    const paramsHash = this.state.files.reduce((acc, image) => {
-      acc[image.uniqueId] = {
-        base64: image.url.split("base64,").pop(),
-        id: image.uniqueId,
-        type: image.type
-      };
-
-      return acc;
-    }, {});
-
-    const buildPredictParameters = Object.keys(paramsHash).map(uniqueId => ({
-      [paramsHash[uniqueId]["type"]]: paramsHash[uniqueId]["base64"],
-      id: uniqueId
-    }));
+    const buildPredictParameters = this.state.files.map(file => ({
+      [file.type]: file.type === "base64" ? file.url.split("base64,").pop() : file.url
+    }))
 
     FACE_DETECT_APP.models.predict(Clarifai.FACE_DETECT_MODEL, buildPredictParameters, {video: false})
        .then(response => {
@@ -107,59 +125,28 @@ class Uploader extends Component {
        })
   }
 
-  getBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        resolve({title: file.name, url: reader.result});
-      };
-      reader.onerror = (error) => {
-        console.log('Error: ', error);
-        reject(error);
-      };
-    })
-  }
-
   render() {
     return (
-      <div style={{width: "100%", height: "100%"}} className="container">
-        <div
-          className="dnd-uploader"
+      <div className="container height-width-100">
+        <DnDUploader
           onDrop={this.onFilesDrop}
           onDragOver={this.onDragOver}
-        >
-          <svg className="upload-box-marquee" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-            <rect
-              className="upload-box-rect"
-              x="0" y="0"
-              width="100%" height="100%"
-            />
-          </svg>
-          <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-            <img src={UploadIcon} style={{width: "150px"}}/>
-            <div> Drag and Drop </div>
-            <div> OR </div>
-            <label htmlFor="file-upload" style={{cursor: "pointer"}}>
-              <input
-                id="file-upload"
-                ref={(elem) => { this.fileUploadEl = elem; }}
-                style={{display: "none"}}
-                type="file"
-                multiple="true"
-                onChange={this.onFilesUpload}
-              />
-              <em>Choose</em> from file system
-            </label>
-          </div>
-        </div>
+          onChange={this.onFilesUpload}
+        />
+
         <div className="preview-list">
           {
-            this.state.files.map(file => <FileUploadPreview title={file.title} url={file.url} />)
+            this.state.files.map((file, index) => (
+              <FileUploadPreview
+                key={`file-${index}`}
+                title={file.title}
+                url={file.url}
+              />
+            ))
           }
         </div>
         <div className="toolbar">
-          <div style={{display: "flex", justifyContent: "space-between"}}>
+          <div className="flex-center">
             <input
               className="url-input-box"
               type="text"

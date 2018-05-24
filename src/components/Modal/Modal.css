@@ -36,8 +36,7 @@
 }
 
 .close-button {
-  background: #555555;
-  width: 70px;
+  width: 75px;
   height: 35px;
   float: right;
   display: flex;
