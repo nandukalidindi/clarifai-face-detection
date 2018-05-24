@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Uploader.css';
 
+import UploadIcon from "../../images/upload-to-cloud.png";
+
 import FileUploadPreview from "../FileUploadPreview";
 import { FACE_DETECT_APP } from "../../utils/clarifai";
 
@@ -128,11 +130,17 @@ class Uploader extends Component {
           onDragOver={this.onDragOver}
         >
           <svg className="upload-box-marquee" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-            <rect className="upload-box-rect" x="0" y="0" width="100%" height="100%"></rect>
+            <rect
+              className="upload-box-rect"
+              x="0" y="0"
+              width="100%" height="100%"
+            />
           </svg>
-          <div>
-            <img src="" />
-            <label htmlFor="file-upload">
+          <div style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+            <img src={UploadIcon} style={{width: "150px"}}/>
+            <div> Drag and Drop </div>
+            <div> OR </div>
+            <label htmlFor="file-upload" style={{cursor: "pointer"}}>
               <input
                 id="file-upload"
                 ref={(elem) => { this.fileUploadEl = elem; }}
@@ -141,7 +149,7 @@ class Uploader extends Component {
                 multiple="true"
                 onChange={this.onFilesUpload}
               />
-              browse
+              <em>Choose</em> from file system
             </label>
           </div>
         </div>

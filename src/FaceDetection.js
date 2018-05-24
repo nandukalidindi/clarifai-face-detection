@@ -21,9 +21,14 @@ class FaceDetection extends Component {
 
   render() {
     return (
-      <div style={{padding: "50px"}}>
+      <div style={{margin: "50px", textAlign: "center", position: "relative"}}>
         <ImageList />
-        <input value="UPLOAD" type="button" onClick={this.uploaderModal} />
+        <div
+          className="process-button add-images-links-button"
+          onClick={this.uploaderModal}
+        >
+          ▲
+        </div>
         {
           this.state.modal
             ?

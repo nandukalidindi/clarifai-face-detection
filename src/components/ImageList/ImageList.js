@@ -45,10 +45,13 @@ class ImageList extends React.Component {
 
   render() {
     return (
-      <div style={{display: "flex", flexWrap: "wrap"}}>
+      <div style={{display: "flex", flexWrap: "wrap", width: "80%"}}>
         {
           this.state.images.map(image => (
             <FaceDetectionPreview
+              containerStyle={{width: "200px", height: "150px"}}
+              highlighterStroke={{strokeWidth: "2px", strokeDasharray: "4 6", stroke: "black"}}
+              containerClassName={"image-scalable-thumbnail"}
               url={image.url}
               regions={image.regions || []}
               onClick={this.openPreview}
@@ -63,8 +66,10 @@ class ImageList extends React.Component {
                 <div className="close-button" onClick={this.closeModal}>
                  CLOSE
                 </div>
-                <div style={{width: "90%", height: "90%"}}>
+                <div style={{width: "90%", height: "95%"}}>
                   <FaceDetectionPreview
+                    containerStyle={{width: "100%", height: "100%"}}
+                    highlighterStroke={{strokeWidth: "4px", strokeDasharray: "6 10", stroke: "black"}}
                     url={this.state.activePreview.url}
                     regions={this.state.activePreview.regions}
                     height={"90%"}

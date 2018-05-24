@@ -50,18 +50,27 @@ class FaceDetectionPreview extends React.Component {
   render() {
     return (
       <div
-        style={{height: this.props.height || "150px", position: "relative", margin: "10px"}}
-        className="image-scalable-thumbnail"
+        style={{...this.props.containerStyle, position: "relative", margin: "10px"}}
+        className={this.props.containerClassName}
         onClick={this.props.onClick && this.props.onClick(this.props.url, this.props.regions)}
       >
         <img
           ref={this.imageElem}
-          src={this.props.url} style={{height: "100%"}}
+          src={this.props.url}
+          style={{height: "100%", width: "100%"}}
           onLoad={this.onImageLoad}
         />
         {
           this.state.faceDetectors.map(detector => (
-            <div style={{...detector, backgroundColor: "black", position: "absolute"}} />
+            <div style={{...detector, position: "absolute"}}>
+              <svg className="upload-box-marquee" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                <rect
+                  style={this.props.highlighterStroke}
+                  className="upload-box-rect"
+                  x="0" y="0" width="100%" height="100%"
+                />
+              </svg>
+            </div>
           ))
         }
       </div>
