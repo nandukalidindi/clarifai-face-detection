@@ -5,9 +5,14 @@ import './Uploader.css';
 import UploadIcon from "../../images/upload-to-cloud.png";
 
 import FileUploadPreview from "../FileUploadPreview";
+import Modal from "../Modal";
+import FlashMessage from "../FlashMessage";
+
 import { FACE_DETECT_APP } from "../../utils/clarifai";
 import BASE64_EXTRACTOR from "../../utils/base64Extractor"
 import EMITTER from "../../utils/emitter";
+import URLValidator from "../../utils/url-validator";
+
 
 /**
  * Stateless component that only is responsible for rendering the Drag and Drop
@@ -75,7 +80,10 @@ class Uploader extends Component {
 
     this.state = {
       files: [],
-      processing: false
+      processing: false,
+      validURL: false,
+      status: false,
+      message: "",
     };
   }
 
@@ -137,15 +145,22 @@ class Uploader extends Component {
    * @see insertURL
    * @param {object} event DOM Event
    */
-  addUrl = (event) => {
+  validateURL = (event) => {
     this.insertableURL = event.target.value;
+    this.setState({ validURL: URLValidator(this.insertableURL) })
   }
 
   /**
    * Handler to insert a new file into the files state variable upon the click
    * of the corresponding button
    *
-   * @see addUrl
+   * NOTE: SINCE I AM RUNNING THE APPLICATION IN A LOCAL SERVER I DID NOT ADD
+   *       ANY FURTHER VALIDATION IF THE URL IS INFACT AN IMAGE.
+   *
+   *       I HAD THE IDEA OF SENDING A FAKE XMLHTTPREQUEST TO CHECK IF THE
+   *       RESPONSE HEADERS CONTAINED content-type: image/*
+   *
+   * @see validateURL
    * @param {object} event DOM Event
    */
   insertURL = (event) => {
@@ -188,15 +203,25 @@ class Uploader extends Component {
          localStorage.setItem("imagesList", JSON.stringify(storableData));
 
          this.setState(
-           { processing: false, files: [] },
+           { processing: false, files: [], status: "success", message: "FACES DETECTED!!" },
            () => {
-             this.props.closeModal();
              EMITTER.emit("refreshImageList");
+             setTimeout(() => {
+               this.props.closeModal()
+             }, 3500);
            }
          );
        })
        .catch(error => {
-         debugger;
+         this.setState(
+           { status: "error", message: "INVALID INPUT!!" },
+           () => {
+             EMITTER.emit("refreshImageList");
+             setTimeout(() => {
+               this.props.closeModal()
+             }, 3500);
+           }
+         )
        })
   }
 
@@ -218,13 +243,18 @@ class Uploader extends Component {
         <div className="toolbar">
           <div className="flex-center">
             <input
-              className="url-input-box"
+              className={["url-input-box", this.state.validURL ? "" : "url-input-box-errors"].join(" ")}
               type="text"
               defaultValue=""
-              onChange={this.addUrl}
+              onChange={this.validateURL}
               placeholder="Enter a URL"
             />
-            <div className="process-button" onClick={this.insertURL}> URL </div>
+            <div
+              className={["process-button", this.state.validURL ? "" : "url-input-button-errors"].join(" ")}
+              onClick={this.insertURL}
+            >
+              INSERT URL
+            </div>
           </div>
           <div
             style={
@@ -239,6 +269,12 @@ class Uploader extends Component {
             { this.state.processing ? "PROCESSING ..." : "PROCESS" }
           </div>
         </div>
+        {
+          this.state.status &&
+            <Modal>
+              <FlashMessage type={this.state.status} message={this.state.message} />
+            </Modal>
+        }
       </div>
     );
   }

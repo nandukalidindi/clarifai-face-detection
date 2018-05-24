@@ -86,4 +86,16 @@
   border: 1px solid black;
   padding: 4px;
   text-align: center;
+  outline: none;
+  font-size: 20px;
+}
+
+.url-input-box-errors {
+  border: 1px solid red;
+}
+
+.url-input-button-errors {
+  border: 1px solid red;
+  opacity: 0.5;
+  pointer-events: none;
 }

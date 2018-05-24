@@ -4,8 +4,16 @@ import './ImageList.css';
 
 import FaceDetectionPreview from "../FaceDetectionPreview";
 import Modal from "../Modal";
+import FlashMessage from "../FlashMessage";
 
 import EMITTER from "../../utils/emitter";
+
+const BlankLandingPage = () => (
+  <div className="flex-center blank-landing-page">
+    <div style={{margin: "10px"}}> SEEMS LIKE ITS LONELY OUT HERE </div>
+    <div style={{margin: "10px"}}> CLICK ON THE ORANGE ICON TO UPLOAD IMAGES </div>
+  </div>
+)
 
 class ImageList extends React.Component {
 
@@ -16,7 +24,8 @@ class ImageList extends React.Component {
     this.state = {
       images: JSON.parse(localStorage.getItem("imagesList") || "[]"),
       modal: false,
-      activePreview: {}
+      activePreview: {},
+      showSuccessMessage: false
     }
   }
 
@@ -25,7 +34,9 @@ class ImageList extends React.Component {
   //===========================================================================
   componentWillMount() {
     this.predictSubscription = EMITTER.addListener("refreshImageList", () => {
-      this.setState({ images: JSON.parse(localStorage.getItem("imagesList") || "[]")});
+      this.setState({
+        images: JSON.parse(localStorage.getItem("imagesList") || "[]")
+      });
     })
   }
 
@@ -58,6 +69,7 @@ class ImageList extends React.Component {
   render() {
     return (
       <div style={{display: "flex", flexWrap: "wrap", width: "80%"}}>
+        { this.state.images.length === 0 && <BlankLandingPage /> }
         {
           this.state.images.map((image, index) => (
             <FaceDetectionPreview
