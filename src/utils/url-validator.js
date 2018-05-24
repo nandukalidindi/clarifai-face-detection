@@ -1,4 +1,4 @@
-// DERIVED FROM STACK OVERFLOW 150 UPVOTES ANSWER
+// USED FROM STACK OVERFLOW: 49 UPVOTES AND ACCEPTED ANSWER
 // https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
 
 const URLValidator = (url) => {

@@ -1,3 +1,8 @@
+// TITLE: Uploader
+// DESCRIPTION: Component rendered on top of the Modal and is responsible
+//              for aiding users in uploading images via
+//              Drag N Drop OR Manual Upload OR Inserting URL
+
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import './Uploader.css';
@@ -18,7 +23,7 @@ import URLValidator from "../../utils/url-validator";
  * Stateless component that only is responsible for rendering the Drag and Drop
  * placeholder on the left side of the screen
  *
- * @param {object} { onDrop, onDragOver, onChange }
+ * @param {object} { onDrop:func, onDragOver:func, onChange:func }
  * @return {JSX}
  */
 const DnDUploader = ({ onDrop, onDragOver, onChange }) => (
@@ -56,7 +61,7 @@ const DnDUploader = ({ onDrop, onDragOver, onChange }) => (
  * Stateless component to render the list of all uploaded items either by
  * Drag N Drop OR Manual Upload OR Inserting URL
  *
- * @param {object} { files }
+ * @param {object} { files:array }
  * @return {JSX}
  */
 const PreviewList = ({ files }) => (
@@ -70,6 +75,52 @@ const PreviewList = ({ files }) => (
         />
       ))
     }
+  </div>
+)
+
+/**
+ * Stateless component that only is responsible for rendering the Toolbar controls
+ * which help in invoking the necessary operations for the Uploaded images.
+ *
+ * @param {object} {
+ *                   validURL:boolean, validateURL:func, insertURL:func, files:array,
+ *                   processing:boolean, processImagesForFaceDetection:func
+ *                 }
+ * @return {JSX}
+ */
+const UploaderToolbar = ({
+  validURL, validateURL, insertURL,
+  files, processing, processImagesForFaceDetection
+}) => (
+  <div className="toolbar">
+    <div className="flex-center">
+      <input
+        className={["url-input-box", validURL ? "" : "url-input-box-errors"].join(" ")}
+        type="text"
+        defaultValue=""
+        onChange={validateURL}
+        placeholder="Enter a URL"
+      />
+      <div
+        className={["process-button", validURL ? "" : "url-input-button-errors"].join(" ")}
+        style={{height: "30px"}}
+        onClick={insertURL}
+      >
+        INSERT URL
+      </div>
+    </div>
+    <div
+      style={
+        files.length > 0 || processing ?
+          { pointerEvents: "auto", opacity: 1.0, width: "100%", height: "30px" }
+          :
+          { pointerEvents: "none", opacity: 0.5, width: "100%", height: "30px" }
+      }
+      className="process-button"
+      onClick={processImagesForFaceDetection}
+    >
+      { processing ? "PROCESSING ..." : "PROCESS" }
+    </div>
   </div>
 )
 
@@ -208,7 +259,7 @@ class Uploader extends Component {
              EMITTER.emit("refreshImageList");
              setTimeout(() => {
                this.props.closeModal()
-             }, 3500);
+             }, 1500);
            }
          );
        })
@@ -219,7 +270,7 @@ class Uploader extends Component {
              EMITTER.emit("refreshImageList");
              setTimeout(() => {
                this.props.closeModal()
-             }, 3500);
+             }, 1500);
            }
          )
        })
@@ -240,35 +291,15 @@ class Uploader extends Component {
 
         <PreviewList files={this.state.files} />
 
-        <div className="toolbar">
-          <div className="flex-center">
-            <input
-              className={["url-input-box", this.state.validURL ? "" : "url-input-box-errors"].join(" ")}
-              type="text"
-              defaultValue=""
-              onChange={this.validateURL}
-              placeholder="Enter a URL"
-            />
-            <div
-              className={["process-button", this.state.validURL ? "" : "url-input-button-errors"].join(" ")}
-              onClick={this.insertURL}
-            >
-              INSERT URL
-            </div>
-          </div>
-          <div
-            style={
-              this.state.files.length > 0 || this.state.processing ?
-                { pointerEvents: "auto", opacity: 1.0, width: "100%", height: "30px" }
-                :
-                { pointerEvents: "none", opacity: 0.5, width: "100%", height: "30px" }
-            }
-            className="process-button"
-            onClick={this.processImagesForFaceDetection}
-          >
-            { this.state.processing ? "PROCESSING ..." : "PROCESS" }
-          </div>
-        </div>
+        <UploaderToolbar
+          validURL={this.state.validURL}
+          validateURL={this.validateURL}
+          insertURL={this.insertURL}
+          processing={this.state.processing}
+          files={this.state.files}
+          processImagesForFaceDetection={this.processImagesForFaceDetection}
+        />
+
         {
           this.state.status &&
             <Modal>

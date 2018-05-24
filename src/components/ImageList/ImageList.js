@@ -8,6 +8,13 @@ import FlashMessage from "../FlashMessage";
 
 import EMITTER from "../../utils/emitter";
 
+
+/**
+ * Stateless Component to render the Blank landing page i.e when no images are
+ * sent for processing
+ *
+ * @return {JSX}
+ */
 const BlankLandingPage = () => (
   <div className="flex-center blank-landing-page">
     <div style={{margin: "10px"}}> SEEMS LIKE ITS LONELY OUT HERE </div>
@@ -48,17 +55,27 @@ class ImageList extends React.Component {
   //                          EVENT HANDLERS
   //===========================================================================
 
-
-  //===========================================================================
-  //                          INSTANCE METHODS
-  //===========================================================================
-
+  /**
+   * Event Handler to close the popup modal that is opened to show the Preview
+   *
+   * @param {object} event
+   */
   closeModal = (event) => {
     this.setState({
       modal: false
     });
   }
 
+  //===========================================================================
+  //                          INSTANCE METHODS
+  //===========================================================================
+
+  /**
+   * Event Handler to open the popup modal that is opened to show the Preview
+   *
+   * @param {string} url
+   * @param {object[]} regions
+   */
   openPreview = (url, regions) => (event) => {
     this.setState({
       activePreview: { url, regions },

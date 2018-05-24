@@ -1,3 +1,6 @@
+// TITLE: FaceDetection
+// DESCRIPTION: Root Component that renders all the required components
+
 import React, { Component } from "react";
 
 import Uploader from "./components/Uploader";
@@ -21,7 +24,7 @@ class FaceDetection extends Component {
 
   render() {
     return (
-      <div style={{margin: "50px", textAlign: "center", position: "relative"}}>
+      <div style={{padding: "50px", textAlign: "center", position: "relative"}}>
         <ImageList />
         <div
           className="process-button add-images-links-button"
